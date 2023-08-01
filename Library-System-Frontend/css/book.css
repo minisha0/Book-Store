@@ -1,0 +1,60 @@
+* {
+  overflow-x: hidden;
+}
+div.books {
+  background-color: #382e2e;
+}
+.box-container {
+  width: 100vw;
+}
+div.books h1 {
+  font-family: "Raleway-bold";
+  text-align: center;
+  color: var(--pink);
+  /* background: red; */
+  position: relative;
+  height: 100px;
+}
+
+.books h1::after {
+  content: "";
+  width: 100%;
+  height: 20px;
+  background-image: url(../icons/hr.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+}
+.wrapper {
+  width: 90%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 4rem;
+  row-gap: 2.5rem;
+  margin-top: 50px;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid var(--pink);
+  padding: 10px 0;
+  border-radius: 5px;
+}
+
+div.box h3 {
+  margin-top: 10px;
+  font-size: 20px;
+  font-family: "Raleway-bold";
+  text-align: center;
+  color: var(--pink);
+  letter-spacing: 2px;
+}
+
+.books-btn {
+  color: #f0f0f0;
+}

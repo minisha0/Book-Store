@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login|Register</title>
+    <link rel="stylesheet" href="css/login.css">
+    <script src="https://kit.fontawesome.com/e71f889170.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <!-- FOR LOGIN -->
+
+    <div class="container">
+        <div class="form-box">
+            <h1>Login</h1>
+            <form>
+
+                <div class="input-field">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" placeholder="Email">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-field">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" placeholder="Password">
+                    </div>
+                    <p>Forget Password <a href="#">Click Here!</a></p>
+                </div>
+                <div class="btn-field">
+                    <button type="button">Login</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <script>
+        // JavaScript code for the register.html page
+
+        // Function to handle form submission
+        function handleRegistrationFormSubmit(event) {
+            event.preventDefault();
+
+            // Get the form elements
+            const registerForm = document.getElementById('register-form');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm-password');
+
+            // Get the values from the form inputs
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            const confirmPassword = confirmPasswordInput.value.trim();
+
+            // Perform form validation
+            if (!email || !password || !confirmPassword) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match. Please re-enter the same password.');
+                return;
+            }
+            const url = 'http://localhost:5000/register';
+
+const userData = {
+  username: username,
+  password: password,
+};
+
+// Create options for the fetch request
+const requestOptions = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(userData),
+};
+
+async function registerUser(){
+    try{
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+          });
+      
+          const data = await response.json();
+          // Process the response data after the POST request
+          console.log(data);
+    } catch (error) {
+        // Handle any errors that occurred during the fetch process
+        console.error('Fetch error:', error);
+      }
+}
+
+registerUser()
+      
+
+        
+        registerForm.addEventListener('submit', handleRegistrationFormSubmit);
+    </script>
+</body>
+
+</html>
