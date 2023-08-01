@@ -11,8 +11,8 @@
 </head>
 
 <body>
-    <!-- for responsive view navigation -->
 
+    <!-- for responsive view navigation -->
     <div class="main-wrapper">
         <div class="nav-background">
             <div class="mobile-logo">
@@ -52,12 +52,14 @@
                         <li>
                             <a href="#">Contact-Us</a>
                         </li>
-                        <li>
-                            <a href="login.html">Log in</a>
-                        </li>
-                        <li>
-                            <a href="register.html">Register</a>
-                        </li>
+                        <div class="logged_in_buttons">
+                            <li>
+                                <a href="login.html">Log in</a>
+                            </li>
+                            <li>
+                                <a href="register.html">Register</a>
+                            </li>
+                        </div>
                     </ul>
                 </div>
                 <div class="contact flex items-center">
@@ -100,13 +102,13 @@
                             <a href="#"><img src="./icons/search.svg" alt=""></a>
                         </div>
                         <div class="auth flex items-center">
-                            <div>
+                            <div class="logged_in_buttons">
                                 <img src="./icons/user-icon.svg" alt="">
 
                                 <a href="login.html">Log in</a>
                             </div>
                             <span class="divider">|</span>
-                            <div>
+                            <div class="logged_in_buttons">
                                 <img src="./icons/edit.svg" alt="">
                                 <a href="register.html">Register Now</a>
                             </div>
@@ -545,6 +547,16 @@
     <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="js/script.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            access_token = localStorage.getItem("access_token")
+            if (access_token) {
+                const logged_in_buttons = document.querySelector(".logged_in_buttons")
+                logged_in_buttons.innerHTML = ""
+            }
+        });
+    </script>
 </body>
 
 </html>

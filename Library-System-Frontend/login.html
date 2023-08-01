@@ -13,23 +13,24 @@
 <body>
     <div class="container">
         <div class="form-box">
-            <h1>Login</h1>
-            <form id="loginForm"> <!-- Added an ID to the form for easy access in JavaScript -->
-
+            <h1>Sign in</h1>
+            <form id="login-form"> <!-- Added an ID to the form for easy access in JavaScript -->
                 <div class="input-field">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="email" id="emailInput" placeholder="username"> <!-- Added ID for email input -->
+                    <input type="email" id="emailInput" placeholder="username" required>
+                    <!-- Added ID for email input -->
                 </div>
 
                 <div class="input-group">
                     <div class="input-field">
                         <i class="fa-solid fa-lock"></i>
-                        <input type="password" id="passwordInput" placeholder="Password"> <!-- Added ID for password input -->
+                        <input type="password" id="passwordInput" placeholder="Password" required>
+                        <!-- Added ID for password input -->
                     </div>
                     <p>Forget Password <a href="#">Click Here!</a></p>
                 </div>
                 <div class="btn-field">
-                    <button type="button" id="signInButton">Sign In</button> <!-- Added ID for the Sign In button -->
+                    <button type="submit" id="signInButton">Login</button> <!-- Added ID for the Sign In button -->
                 </div>
             </form>
 
@@ -37,6 +38,8 @@
     </div>
     <script>
         // JavaScript code for form validation and handling form submission
+
+        const loginForm = document.getElementById('login-form');
 
         // Function to handle form submission
         function handleFormSubmission(event) {
@@ -47,49 +50,65 @@
             const password = document.getElementById('passwordInput').value;
 
             // Validate form inputs
-            if (!username|| !password) {
+            if (!username || !password) {
                 alert("Please fill in all the fields.");
                 return;
             }
             const url = 'http://localhost:5000/login';
 
-const userData = {
-  username: username,
-  password: password,
-};
+            const userData = {
+                username: username,
+                password: password,
+            };
 
-// Create options for the fetch request
-const requestOptions = {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(userData),
-};
+            // Create options for the fetch request
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            };
 
-// Perform the POST request using fetch
-async function loginUser(){
-    try{
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-          });
-      
-          const data = await response.json();
-          // Process the response data after the POST request
-          console.log(data);
-    } catch (error) {
-        // Handle any errors that occurred during the fetch process
-        console.error('Fetch error:', error);
-      }
-    }
-      loginUser()
+            // Perform the POST request using fetch
+            async function loginUser() {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(userData),
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        localStorage.setItem("access_token", data.data.access_token)
+                        window.location.href = "http://127.0.0.1:5500/Library-System-Frontend/"
+                    }
+
+                    // Process the response data after the POST request
+                    console.log(data);
+                } catch (error) {
+                    // Handle any errors that occurred during the fetch process
+                    console.error('Fetch error:', error);
+                }
+            }
+            loginUser()
+        }
+
         // Add event listener to the Sign In button
-        document.getElementById('signInButton').addEventListener('click', handleFormSubmission);
-}
+        loginForm.addEventListener('submit', handleFormSubmission);
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            access_token = localStorage.getItem("access_token")
+            if (access_token) {
+                window.location.href = "http://127.0.0.1:5500/Library-System-Frontend/"
+            }
+        });
     </script>
 </body>
 

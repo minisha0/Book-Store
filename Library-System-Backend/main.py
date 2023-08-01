@@ -9,20 +9,16 @@ from response import Message
 from users import users_bp
 from books import books_bp
 from database import *
-from dotenv import load_dotenv
-import os 
-
-# Load environment variables from .env
-load_dotenv()
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 jwt = JWTManager(app) 
 jwt.unauthorized_loader(unauthorized_response_callback)
 jwt.expired_token_loader(expired_token_response_callback)
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES'))) # define the life span of the token
+app.config['JWT_SECRET_KEY'] = "minishaminishaminisha"
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1) # define the life span of the token
 
 # register other routes
 app.register_blueprint(users_bp)

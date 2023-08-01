@@ -1,13 +1,8 @@
 from pymongo import MongoClient
 from models import User
-from dotenv import load_dotenv
-import os 
-
-# Load environment variables from .env
-load_dotenv()
 
 # MongoDB connection
-client = MongoClient(os.getenv('MONGO_URI'))
+client = MongoClient("mongodb://localhost:27017/library")
 db = client["library"]
 
 # collections
