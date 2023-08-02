@@ -102,7 +102,6 @@
                         </div>
                         <div class="auth flex items-center">
                             <div id="loginDiv" class="flex items-center">
-                                <img src="./icons/user-icon.svg" alt="">
                                 <a href="login.html">Log in</a>
                                 <span class="divider">|</span>
                                 <div id="registerDiv">
@@ -110,6 +109,10 @@
                                     <a href="register.html">Register Now</a>
                                 </div>
                                 <span class="divider">|</span>
+                            </div>
+                            <div id="profileDiv" class="flex items-center">
+                                <img src="./icons/user-icon.svg" alt="">
+                                <div id="userNameDiv"></div>
                             </div>
                             <div>
                                 <img src="./icons/cart.svg" alt="">
@@ -548,16 +551,49 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const loginDiv = document.getElementById("loginDiv");
-            // const registerDiv = document.getElementById("registerDiv"); 
+            const profileDiv = document.getElementById("profileDiv");
+            const userNameDiv = document.getElementById("userNameDiv");
+
             access_token = localStorage.getItem("access_token")
+
             if (access_token) {
                 loginDiv.style.display = "none";
-                // registerDiv.style.display = "none";
             } else {
-                // If user is not logged in, show the login and register elements
-                loginDiv.style.display = "block"; // or "inline-block" depending on your CSS
-                // registerDiv.style.display = "block"; // or "inline-block" depending on your CSS
+                loginDiv.style.display = "block";
+                profileDiv.style.display = "none";
             }
+
+            const url = 'http://localhost:5000/get-profile';
+
+            const bearerToken = localStorage.getItem("access_token")
+            const headers = new Headers();
+            headers.append('Authorization', `Bearer ${bearerToken}`);
+            headers.append('Content-Type', 'application/json');
+
+            // Perform the POST request using fetch
+            async function getProfile() {
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: headers,
+
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        loginDiv.style.display = "none";
+                        profileDiv.style.display = "flex";
+                        userNameDiv.innerText = data.data.username
+                    } else {
+                        loginDiv.style.display = "none";
+                    }
+
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                }
+            }
+            getProfile()
         });
     </script>
 </body>

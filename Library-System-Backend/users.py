@@ -4,6 +4,9 @@ from response import Message
 from database import *
 from models import *
 from pydantic import ValidationError
+from pymongo.errors import PyMongoError
+import json
+from bson import json_util
 
 
 users_bp = Blueprint('users', __name__)
@@ -47,3 +50,19 @@ def login():
         return jsonify(Message.format_message('Logged in successfully', True, {"access_token":access_token})), 200
 
     return jsonify(Message.format_message('Username and password are incorrect', False, None)), 401
+
+
+@users_bp.get("/get-profile")
+@jwt_required()
+def add_book():
+    user_id = get_jwt_identity()  # Get the user ID from the JWT token
+
+    try:
+        # Check if the item is already in the user's cart
+        user = users_collection.find_one({'username': user_id}, {'_id': 0})
+
+        print(user)
+        return jsonify(Message.format_message('Profile obtained successfully', True, user)), 200
+
+    except PyMongoError as e:
+        return jsonify(Message.format_message('Error occurred while processing the request', False)), 500

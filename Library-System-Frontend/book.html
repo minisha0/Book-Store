@@ -30,7 +30,7 @@
                         <a href="index.html">Home</a>
                     </li>
                     <li>
-                        <a href="#">About Us</a>
+                        <a href=" #">About Us</a>
                     </li>
                     <li>
                         <a href="book.html">Books</a>
@@ -50,12 +50,14 @@
                     <li>
                         <a href="#">Contact-Us</a>
                     </li>
-                    <li>
-                        <a href="login.html">Log in</a>
-                    </li>
-                    <li>
-                        <a href="register.html">Register</a>
-                    </li>
+                    <div class="logged-in-buttons">
+                        <li>
+                            <a href="login.html">Log in</a>
+                        </li>
+                        <li>
+                            <a href="register.html">Register</a>
+                        </li>
+                    </div>
                 </ul>
             </div>
             <div class="contact flex items-center">
@@ -95,20 +97,22 @@
                         <a href="#"><img src="./icons/search.svg" alt=""></a>
                     </div>
                     <div class="auth flex items-center">
-                        <div>
-                            <img src="./icons/user-icon.svg" alt="">
-
+                        <div id="loginDiv" class="flex items-center">
                             <a href="login.html">Log in</a>
+                            <span class="divider">|</span>
+                            <div id="registerDiv">
+                                <img src="./icons/edit.svg" alt="">
+                                <a href="register.html">Register Now</a>
+                            </div>
+                            <span class="divider">|</span>
                         </div>
-                        <span class="divider">|</span>
-                        <div>
-                            <img src="./icons/edit.svg" alt="">
-                            <a href="register.html">Register Now</a>
+                        <div id="profileDiv" class="flex items-center">
+                            <img src="./icons/user-icon.svg" alt="">
+                            <div id="userNameDiv"></div>
                         </div>
-                        <span class="divider">|</span>
                         <div>
                             <img src="./icons/cart.svg" alt="">
-                            <a href="#">0 Items - ($0.00)</a>
+                            <a href="#">0 Items - (Rs.0.00)</a>
                         </div>
                     </div>
 
@@ -438,6 +442,55 @@
 
                     });
                 })
+            </script>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const loginDiv = document.getElementById("loginDiv");
+                    const profileDiv = document.getElementById("profileDiv");
+                    const userNameDiv = document.getElementById("userNameDiv");
+
+                    access_token = localStorage.getItem("access_token")
+
+                    if (access_token) {
+                        loginDiv.style.display = "none";
+                    } else {
+                        loginDiv.style.display = "block";
+                        profileDiv.style.display = "none";
+                    }
+
+                    const url = 'http://localhost:5000/get-profile';
+
+                    const bearerToken = localStorage.getItem("access_token")
+                    const headers = new Headers();
+                    headers.append('Authorization', `Bearer ${bearerToken}`);
+                    headers.append('Content-Type', 'application/json');
+
+                    // Perform the POST request using fetch
+                    async function getProfile() {
+                        try {
+                            const response = await fetch(url, {
+                                method: 'GET',
+                                headers: headers,
+
+                            });
+
+                            const data = await response.json();
+
+                            if (data.success) {
+                                loginDiv.style.display = "none";
+                                profileDiv.style.display = "flex";
+                                userNameDiv.innerText = data.data.username
+                            } else {
+                                loginDiv.style.display = "none";
+                            }
+
+                        } catch (error) {
+                            console.error('Fetch error:', error);
+                        }
+                    }
+                    getProfile()
+                });
             </script>
 
 
