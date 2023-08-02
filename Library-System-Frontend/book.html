@@ -155,6 +155,57 @@
             </nav>
             <div class="books">
                 <div class="box-container">
+
+                    <div class="addBookContainer">
+                        <h1>Add a Book</h1>
+                        <button id="toggleFormButton">Add Book</button>
+
+                        <form id="addBookForm">
+                            <div class="form-group">
+                                <label for="isbn">ISBN:</label>
+                                <input type="text" id="isbn" name="isbn" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="published_date">Published Date:</label>
+                                <input type="date" id="published_date" name="published_date" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="author_name">Author Name:</label>
+                                <input type="text" id="author_name" name="author_name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="category">Category:</label>
+                                <input type="text" id="category" name="category" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Description:</label>
+                                <textarea id="description" name="description" rows="4" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="image_url">Image URL:</label>
+                                <input type="url" id="image_url" name="image_url" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="price">Price:</label>
+                                <input type="number" id="price" name="price" step="0.01" required>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit">Add Book</button>
+                            </div>
+                        </form>
+                    </div>
                     <h1>Newly Arrived</h1>
                     <div class="wrapper">
 
@@ -252,7 +303,7 @@
             </div>
             <script>
                 // JavaScript code for the book.html page
-        
+
                 // Sample data for popular books (replace this with your actual data)
                 const popularBooksData = [
                     {
@@ -265,16 +316,16 @@
                     },
                     // Add more book data as needed
                 ];
-        
+
                 // Function to render popular books
                 function renderPopularBooks() {
                     const renderPopularBooksDiv = document.getElementById('render_popular_books');
                     renderPopularBooksDiv.innerHTML = '';
-        
+
                     popularBooksData.forEach(book => {
                         const boxDiv = document.createElement('div');
                         boxDiv.classList.add('box');
-        
+
                         const adDiv = document.createElement('div');
                         adDiv.classList.add('ad');
                         const bookImage = document.createElement('img');
@@ -282,11 +333,11 @@
                         bookImage.width = 450;
                         adDiv.appendChild(bookImage);
                         boxDiv.appendChild(adDiv);
-        
+
                         const h3 = document.createElement('h3');
                         h3.textContent = book.title;
                         boxDiv.appendChild(h3);
-        
+
                         const btn = document.createElement('button');
                         btn.classList.add('books-btn', 'btn', 'btn-primary');
                         const cartIcon = document.createElement('img');
@@ -297,14 +348,14 @@
                         btn.appendChild(cartIcon);
                         btn.appendChild(span);
                         boxDiv.appendChild(btn);
-        
+
                         renderPopularBooksDiv.appendChild(boxDiv);
                     });
                 }
-        
+
                 // Call the renderPopularBooks function to display popular books initially
                 renderPopularBooks();
-        
+
                 // Event listener for the cart buttons (you can implement the cart functionality here)
                 const cartButtons = document.querySelectorAll('.books-btn');
                 cartButtons.forEach(button => {
@@ -315,10 +366,81 @@
                 });
             </script>
 
-        </script>
-fetch 
-    </script>
-        
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const toggleFormButton = document.getElementById("toggleFormButton");
+                    const addBookForm = document.getElementById("addBookForm");
+
+                    toggleFormButton.addEventListener("click", function () {
+                        if (addBookForm.style.display === "none") {
+                            addBookForm.style.display = "block";
+                            toggleFormButton.textContent = "Hide Form";
+                        } else {
+                            addBookForm.style.display = "none";
+                            toggleFormButton.textContent = "Add Book";
+                        }
+                    });
+                });
+            </script>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const toggleFormButton = document.getElementById("toggleFormButton");
+                    const addBookForm = document.getElementById("addBookForm");
+
+                    toggleFormButton.addEventListener("click", function () {
+                        if (addBookForm.style.display === "none") {
+                            addBookForm.style.display = "block";
+                            toggleFormButton.textContent = "Hide Form";
+                        } else {
+                            addBookForm.style.display = "none";
+                            toggleFormButton.textContent = "Add Book";
+                        }
+                    });
+
+                    addBookForm.addEventListener("submit", function (event) {
+                        event.preventDefault();
+                        const formData = new FormData(addBookForm);
+                        const bookData = {};
+                        formData.forEach((value, key) => {
+                            bookData[key] = value;
+                        });
+
+
+                        const url = 'http://localhost:5000/books/add-book';
+
+
+                        const bearerToken = localStorage.getItem("access_token")
+                        const headers = new Headers();
+                        headers.append('Authorization', `Bearer ${bearerToken}`);
+                        headers.append('Content-Type', 'application/json');
+
+                        // Perform the POST request using fetch
+                        async function bookAdd() {
+                            try {
+                                const response = await fetch(url, {
+                                    method: 'POST',
+                                    headers: headers,
+                                    body: JSON.stringify(bookData),
+                                });
+
+                                const data = await response.json();
+
+                                if (data.success) {
+                                    addBookForm.style.display = "none";
+                                    toggleFormButton.textContent = "Add Book";
+                                }
+                            } catch (error) {
+                                // Handle any errors that occurred during the fetch process
+                                console.error('Fetch error:', error);
+                            }
+                        }
+                        bookAdd()
+
+                    });
+                })
+            </script>
+
 
 </body>
 

@@ -61,15 +61,6 @@
                 password: password,
             };
 
-            // Create options for the fetch request
-            const requestOptions = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData),
-            };
-
             // Perform the POST request using fetch
             async function loginUser() {
                 try {
