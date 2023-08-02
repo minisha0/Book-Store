@@ -16,7 +16,6 @@
     <div class="main-wrapper">
         <div class="nav-background">
             <div class="mobile-logo">
-
                 <img src="./icons/logo.png" alt="">
             </div>
             <div class="mobile-nav">
@@ -102,17 +101,16 @@
                             <a href="#"><img src="./icons/search.svg" alt=""></a>
                         </div>
                         <div class="auth flex items-center">
-                            <div class="logged-in-buttons">
+                            <div id="loginDiv" class="flex items-center">
                                 <img src="./icons/user-icon.svg" alt="">
-
                                 <a href="login.html">Log in</a>
+                                <span class="divider">|</span>
+                                <div id="registerDiv">
+                                    <img src="./icons/edit.svg" alt="">
+                                    <a href="register.html">Register Now</a>
+                                </div>
+                                <span class="divider">|</span>
                             </div>
-                            <span class="divider">|</span>
-                            <div class="logged-in-buttons">
-                                <img src="./icons/edit.svg" alt="">
-                                <a href="register.html">Register Now</a>
-                            </div>
-                            <span class="divider">|</span>
                             <div>
                                 <img src="./icons/cart.svg" alt="">
                                 <a href="#">0 Items - (Rs.0.00)</a>
@@ -549,10 +547,16 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const logged_in_buttons = document.querySelector(".logged-in-buttons")
+            const loginDiv = document.getElementById("loginDiv");
+            // const registerDiv = document.getElementById("registerDiv"); 
             access_token = localStorage.getItem("access_token")
             if (access_token) {
-                logged_in_buttons.innerHTML = ""
+                loginDiv.style.display = "none";
+                // registerDiv.style.display = "none";
+            } else {
+                // If user is not logged in, show the login and register elements
+                loginDiv.style.display = "block"; // or "inline-block" depending on your CSS
+                // registerDiv.style.display = "block"; // or "inline-block" depending on your CSS
             }
         });
     </script>

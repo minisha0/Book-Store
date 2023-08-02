@@ -15,7 +15,7 @@ class BookModel(BaseModel):
     author_name: str
     category: str
     description: str
-    image_url: str
+    image_url: str = None
     rating: int = 0
     price: int
 

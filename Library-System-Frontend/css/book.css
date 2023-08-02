@@ -1,12 +1,15 @@
 * {
   overflow-x: hidden;
 }
+
 div.books {
   background-color: #382e2e;
 }
+
 .box-container {
-  width: 100vw;
+  margin-bottom: 50px;
 }
+
 div.books h1 {
   font-family: "Raleway-bold";
   text-align: center;
@@ -27,6 +30,7 @@ div.books h1 {
   bottom: 30px;
   left: 0;
 }
+
 .wrapper {
   width: 90%;
   margin: 0 auto;
@@ -118,6 +122,7 @@ button:hover {
 
 /* Optional: Increase input size for better readability on larger screens */
 @media screen and (min-width: 768px) {
+
   input[type="text"],
   input[type="number"],
   input[type="date"],
@@ -135,7 +140,7 @@ button:hover {
 
 button#toggleFormButton {
   margin-bottom: 20px;
-  background-color: #007BFF;
+  background-color: #322929;
   color: #fff;
   padding: 10px 20px;
   border: none;
@@ -146,5 +151,5 @@ button#toggleFormButton {
 }
 
 button#toggleFormButton:hover {
-  background-color: #0056b3;
+  background-color: #911f40;
 }
