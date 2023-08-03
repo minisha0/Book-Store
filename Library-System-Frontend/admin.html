@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <link rel="stylesheet" href="./css/admin.css">
+    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+    
+</head>
+
+<body>
+
+
+    <div class="book-section">
+
+        <table id="book-table">
+            <h2 style="text-align: center;">Added Books</h2>
+
+            <!-- <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>Book Title</th>
+                    <th>Action</th>
+                </tr>
+            </thead> -->
+            <tbody id="table_body">
+                <tr>
+
+                </tr>
+            </tbody>
+        </table>
+
+
+
+        <form action="" id="form">
+            <div>
+                <label for="">Book Number(isbn)</label>
+                <input type="text" id="isbn" placeholder="Book Number">
+            </div>
+
+            <div>
+                <label for="">Book Name</label>
+                <input type="text" id="book_name" placeholder="Book Name">
+            </div>
+
+            <div>
+                <label for="">Author Name</label>
+                <input type="text" id="author_name" placeholder="Author Name">
+            </div>
+
+
+            <div>
+                <label for="">Category</label>
+                <input type="text" id="category" placeholder="Category">
+            </div>
+
+
+            <div>
+                <label for="">Description</label>
+                <input type="text" id="description" placeholder="Description">
+            </div>
+
+            <div>
+                <label for="">Image</label>
+                <input type="file" id="img">
+            </div>
+
+            <div>
+                <label for="">Rating</label>
+                <input type="number" id="rating" placeholder="Rating">
+            </div>
+
+            <div>
+                <label for="">Price</label>
+                <input type="number" id="price" placeholder="Price">
+            </div>
+
+            <div>
+                <label for="">Published Date</label>
+                <input type="text" id="published_date" placeholder="2022-03-28">
+            </div>
+
+            <button type="button" id="submit_btn">Add Book</button>
+        </form>
+    </div>
+
+    <script src=" ./JS/admin.js"></script>
+</body>
+
+</html>
