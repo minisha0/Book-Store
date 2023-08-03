@@ -33,13 +33,16 @@
                     <button type="submit" id="signInButton">Login</button> <!-- Added ID for the Sign In button -->
                 </div>
             </form>
-
+            <div id="error-message" style="display: none;">
+            </div>
         </div>
     </div>
     <script>
         // JavaScript code for form validation and handling form submission
 
         const loginForm = document.getElementById('login-form');
+        const errorMessage = document.getElementById("error-message");
+
 
         // Function to handle form submission
         function handleFormSubmission(event) {
@@ -74,6 +77,9 @@
 
                     const data = await response.json();
 
+                    errorMessage.innerText = data.message
+                    errorMessage.style.display = "block"
+
                     if (data.success) {
                         localStorage.setItem("access_token", data.data.access_token)
                         window.location.href = "http://127.0.0.1:5500/Library-System-Frontend/"
@@ -81,6 +87,10 @@
 
                     // Process the response data after the POST request
                     console.log(data);
+
+                    setTimeout(function () {
+                        errorMessage.style.display = "none";
+                    }, 3000);
                 } catch (error) {
                     // Handle any errors that occurred during the fetch process
                     console.error('Fetch error:', error);

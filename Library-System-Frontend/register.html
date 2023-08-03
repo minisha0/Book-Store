@@ -13,83 +13,69 @@
 <body>
 
     <!-- FOR LOGIN -->
-            <div class="container">
-                
-                <div class="form-box">
-                  <h1>Sign Up</h1>
-                  <form id="register-form">
+    <div class="container">
+
+        <div class="form-box">
+            <h1>Sign Up</h1>
+            <form id="register-form">
+                <div class="input-field">
+                    <i class="fa-solid fa-user"></i>
+                    <input id="firstname" type="text" placeholder="First Name" required>
+                </div>
+
+                <div class="input-field">
+                    <i class="fa-solid fa-user"></i>
+                    <input id="lastname" type="text" placeholder="Last Name" required>
+                </div>
+
+                <div class="input-field">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input id="email" type="email" placeholder="Email" required>
+                </div>
+
+                <div class="input-group">
                     <div class="input-field">
-                      <i class="fa-solid fa-user"></i>
-                      <input id="firstname" type="text" placeholder="First Name" required>
-                    </div>
-            
-                    <div class="input-field">
-                      <i class="fa-solid fa-user"></i>
-                      <input id="lastname" type="text" placeholder="Last Name" required>
-                    </div>
-            
-                    <div class="input-field">
-                      <i class="fa-solid fa-envelope"></i>
-                      <input id="email" type="email" placeholder="Email" required>
-                    </div>
-            
-                    <div class="input-group">
-                      <div class="input-field">
                         <i class="fa-solid fa-lock"></i>
                         <input id='password' type="password" placeholder="Password" required>
-                      </div>
-                      <p>Forget Password <a href="#">Click Here!</a></p>
                     </div>
-                    <div class="btn-field">
-                      <button type="submit">Register</button>
-                    </div>
-                  </form>
+                    <p>Forget Password <a href="#">Click Here!</a></p>
                 </div>
-              </div>
-            
-
+                <div class="btn-field">
+                    <button type="submit">Register</button>
+                </div>
+            </form>
+            <div id="error-message" style="display: none;">
+            </div>
         </div>
+    </div>
+
+
+    </div>
     </div>
 
 
     <script>
         // JavaScript code for the register.html page
         const registerForm = document.getElementById('register-form');
+        const errorMessage = document.getElementById("error-message");
+
         // Function to handle form submission
-        function handleRegistrationFormSubmit(event) 
-        {
+        function handleRegistrationFormSubmit(event) {
             event.preventDefault();
- 
+
             // Get the form elements 
-             const firstNameInput = document.getElementById('firstname'); 
-             const lastNameInput = document.getElementById('lastname'); 
-             const emailInput = document.getElementById('email'); 
-             const passwordInput = document.getElementById('password');
-             // Get the values from the form inputs
-             const firstName = firstNameInput.value.trim();
-             const lastName = lastNameInput.value.trim();
-             const email = emailInput.value.trim();
-             const password = passwordInput.value.trim();
+            const firstNameInput = document.getElementById('firstname');
+            const lastNameInput = document.getElementById('lastname');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            // Get the values from the form inputs
+            const firstName = firstNameInput.value.trim();
+            const lastName = lastNameInput.value.trim();
+            const username = emailInput.value.trim();
+            const password = passwordInput.value.trim();
 
-             // Validate the form inputs (Optional: You can add your own validation logic here
-            // Create an object to store the registration data
-            const registrationData = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                password: password
-            };
-
-            // Here, you can perform any further processing like sending data to a server or displaying a success message.
-            console.log('Registration Data:', registrationData)
-            // Optional: You can reset the form after successful submission
-            registerForm.reset();
-        }
-        // Add event listener to the form for form submission handling
-        registerForm.addEventListener('submit', handleRegistrationFormSubmit);
-        // Perform form validation
-            if (!username || !password) 
-            {
+            // Perform form validation
+            if (!username || !password) {
                 alert('Please fill in all fields.');
                 return;
             }
@@ -114,18 +100,28 @@
 
                     const data = await response.json();
 
+                    errorMessage.innerText = data.message
+                    errorMessage.style.display = "block"
+
                     if (data.success) {
                         window.location.href = "http://127.0.0.1:5500/Library-System-Frontend/login.html"
                     }
                     // Process the response data after the POST request
                     console.log(data);
+
+                    setTimeout(function () {
+                        errorMessage.style.display = "none";
+                    }, 3000);
+
                 } catch (error) {
                     // Handle any errors that occurred during the fetch process
                     console.error('Fetch error:', error);
                 }
             }
             registerUser()
-        
+
+            registerForm.reset();
+        }
 
         registerForm.addEventListener('submit', handleRegistrationFormSubmit);
     </script>
