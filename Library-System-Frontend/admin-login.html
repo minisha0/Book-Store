@@ -76,6 +76,39 @@
             loginAdmin()
         });
     </script>
+
+    <script>
+        const url = 'http://localhost:5000/get-profile';
+
+        const bearerToken = localStorage.getItem("access_token")
+        const headers = new Headers();
+        headers.append('Authorization', `Bearer ${bearerToken}`);
+        headers.append('Content-Type', 'application/json');
+
+        // Perform the POST request using fetch
+        async function getProfile() {
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: headers,
+
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.data.type == "admin") {
+                        window.location.replace("admin.html");
+                    }
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
+        }
+
+        getProfile()
+    </script>
 </body>
 
 </html>

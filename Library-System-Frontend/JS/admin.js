@@ -3,7 +3,6 @@ const form = document.getElementById("form");
 const access_token = localStorage.getItem("access_token");
 
 if (!access_token) {
-  alert("Please login to view this page");
   window.location.replace("admin-login.html");
 }
 
@@ -26,11 +25,9 @@ async function getProfile() {
     const data = await response.json();
 
     if (data.success) {
-      if (data.data.type == "admin") {
-        window.location.replace("admin.html");
+      if (data.data.type != "admin") {
+        window.location.replace("admin-login.html");
       }
-    } else {
-      window.location.replace("admin-login.html");
     }
 
   } catch (error) {
