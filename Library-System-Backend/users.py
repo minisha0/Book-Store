@@ -50,12 +50,36 @@ def login():
         return jsonify(Message.format_message('Logged in successfully', True, {"access_token":access_token})), 200
 
     return jsonify(Message.format_message('Username and password are incorrect', False, None)), 401
+    
+
+@users_bp.route("/admin-login", methods=["POST"])
+def admin_login():
+    login_details = request.get_json()
+    try:
+        user = UserModel(**login_details)
+    except ValidationError as e:
+        return jsonify(Message.format_message('Validation Error', False, e.errors())), 400
+
+    if not user.username or not user.password:
+        return jsonify(Message.format_message('Username and password are required', False, None)), 400
+
+    current_user = user_model.find_user_by_username(user.username)
+
+    if current_user and user_model.check_password(current_user, user.password):
+        if current_user['type'] == "admin":
+            access_token = create_access_token(identity=user.username)
+            return jsonify(Message.format_message('Admin logged in successfully', True, {"access_token":access_token})), 200
+        else:
+            return jsonify(Message.format_message('You are not admin', False, None)), 401
+
+    return jsonify(Message.format_message('Username and password are incorrect', False, None)), 401
 
 
 @users_bp.get("/get-profile")
 @jwt_required()
-def add_book():
+def get_profile():
     user_id = get_jwt_identity()  # Get the user ID from the JWT token
+
 
     try:
         # Check if the item is already in the user's cart

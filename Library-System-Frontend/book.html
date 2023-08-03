@@ -106,13 +106,15 @@
                             </div>
                             <span class="divider">|</span>
                         </div>
-                        <div id="profileDiv" class="flex items-center">
+                        <div id="profileDiv">
                             <img src="./icons/user-icon.svg" alt="">
                             <div id="userNameDiv"></div>
                         </div>
-                        <div>
+                        <div id="cartDiv">
                             <img src="./icons/cart.svg" alt="">
-                            <a href="#">0 Items - (Rs.0.00)</a>
+                            <a href="/Library-System-Frontend/my-carts.html"><span id="cart-items">0</span> Items -
+                                (Rs.<span id="carts-price">0.00</span>)</a>
+
                         </div>
                     </div>
 
@@ -159,57 +161,6 @@
             </nav>
             <div class="books">
                 <div class="box-container">
-
-                    <div class="addBookContainer">
-                        <h1>Add a Book</h1>
-                        <button id="toggleFormButton">Add Book</button>
-
-                        <form id="addBookForm">
-                            <div class="form-group">
-                                <label for="isbn">ISBN:</label>
-                                <input type="text" id="isbn" name="isbn" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="name">Name:</label>
-                                <input type="text" id="name" name="name" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="published_date">Published Date:</label>
-                                <input type="date" id="published_date" name="published_date" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="author_name">Author Name:</label>
-                                <input type="text" id="author_name" name="author_name" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="category">Category:</label>
-                                <input type="text" id="category" name="category" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="description">Description:</label>
-                                <textarea id="description" name="description" rows="4" required></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="image_url">Image URL:</label>
-                                <input type="url" id="image_url" name="image_url" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="price">Price:</label>
-                                <input type="number" id="price" name="price" step="0.01" required>
-                            </div>
-
-                            <div class="form-group">
-                                <button type="submit">Add Book</button>
-                            </div>
-                        </form>
-                    </div>
                     <!-- <h1>Newly Arrived</h1>
                     <div class="wrapper">
 
@@ -325,7 +276,6 @@
 
                         const data = await response.json();
 
-                        console.log(data)
                         const newlyArrivedBooks = data.data
 
                         // Function to render popular books
@@ -352,14 +302,15 @@
                                 boxDiv.appendChild(h3);
 
                                 const btn = document.createElement('button');
-                                btn.classList.add('books-btn', 'btn', 'btn-primary');
+                                // btn.classList.add('books-btn', 'btn', 'btn-primary');
                                 const cartIcon = document.createElement('img');
                                 cartIcon.src = './icons/cart-2.svg';
                                 cartIcon.width = 25;
-                                const span = document.createElement('span');
-                                span.textContent = 'Add To Cart';
+                                const link = document.createElement('a');
+                                link.textContent = 'Add To Cart';
+                                link.href = `/Library-System-Frontend/cart.html?book-id=${book.isbn}`
                                 btn.appendChild(cartIcon);
-                                btn.appendChild(span);
+                                btn.appendChild(link);
                                 boxDiv.appendChild(btn);
 
                                 renderPopularBooksDiv.appendChild(boxDiv);
@@ -389,66 +340,10 @@
 
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
-                    const toggleFormButton = document.getElementById("toggleFormButton");
-                    const addBookForm = document.getElementById("addBookForm");
-                    addBookForm.style.display = "none";
-
-                    toggleFormButton.addEventListener("click", function () {
-                        if (addBookForm.style.display === "none") {
-                            addBookForm.style.display = "block";
-                            toggleFormButton.textContent = "Hide Form";
-                        } else {
-                            addBookForm.style.display = "none";
-                            toggleFormButton.textContent = "Add Book";
-                        }
-                    });
-
-                    addBookForm.addEventListener("submit", function (event) {
-                        event.preventDefault();
-                        const formData = new FormData(addBookForm);
-                        const bookData = {};
-                        formData.forEach((value, key) => {
-                            bookData[key] = value;
-                        });
-
-                        const url = 'http://localhost:5000/books/add-book';
-
-                        const bearerToken = localStorage.getItem("access_token")
-                        const headers = new Headers();
-                        headers.append('Authorization', `Bearer ${bearerToken}`);
-                        headers.append('Content-Type', 'application/json');
-
-                        // Perform the POST request using fetch
-                        async function bookAdd() {
-                            try {
-                                const response = await fetch(url, {
-                                    method: 'POST',
-                                    headers: headers,
-                                    body: JSON.stringify(bookData),
-                                });
-
-                                const data = await response.json();
-
-                                if (data.success) {
-                                    addBookForm.style.display = "none";
-                                    toggleFormButton.textContent = "Add Book";
-                                }
-                            } catch (error) {
-                                // Handle any errors that occurred during the fetch process
-                                console.error('Fetch error:', error);
-                            }
-                        }
-                        bookAdd()
-
-                    });
-                })
-            </script>
-
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
                     const loginDiv = document.getElementById("loginDiv");
                     const profileDiv = document.getElementById("profileDiv");
                     const userNameDiv = document.getElementById("userNameDiv");
+                    const cartDiv = document.getElementById("cartDiv");
 
                     access_token = localStorage.getItem("access_token")
 
@@ -480,16 +375,57 @@
                             if (data.success) {
                                 loginDiv.style.display = "none";
                                 profileDiv.style.display = "flex";
+                                cartDiv.style.display = "block";
                                 userNameDiv.innerText = data.data.username
                             } else {
-                                loginDiv.style.display = "none";
+                                loginDiv.style.display = "flex";
+                                cartDiv.style.display = "none";
+                                localStorage.removeItem("access_token")
                             }
 
                         } catch (error) {
                             console.error('Fetch error:', error);
                         }
                     }
-                    getProfile()
+
+                    async function fetchCarts() {
+                        // const booksInCart = document.getElementById("books-in-cart")
+                        const cartItems = document.getElementById("cart-items");
+                        const cartsPrice = document.getElementById("carts-price");
+
+                        const url = 'http://localhost:5000/books/get-carts-price';
+
+                        const bearerToken = localStorage.getItem("access_token")
+                        const headers = new Headers();
+                        headers.append('Authorization', `Bearer ${bearerToken}`);
+                        headers.append('Content-Type', 'application/json');
+
+                        try {
+                            const response = await fetch(url, {
+                                method: 'GET',
+                                headers: headers,
+                            });
+
+                            const data = await response.json();
+                            console.log(data)
+
+                            if (data.success) {
+                                cartItems.innerText = data.data.quantity
+                                cartsPrice.innerText = data.data.price
+                            }
+                        } catch (error) {
+                            // Handle any errors that occurred during the fetch process
+                            console.error('Fetch error:', error);
+                        }
+                    }
+
+                    Promise.all([fetchCarts(), getProfile()])
+                        .then(() => {
+                            // console.log("Both fetch requests completed.");
+                        })
+                        .catch((error) => {
+                            console.error("Error in fetching:", error);
+                        });
                 });
             </script>
 

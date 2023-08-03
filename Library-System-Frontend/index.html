@@ -105,7 +105,7 @@
                                 <a href="login.html">Log in</a>
                                 <span class="divider">|</span>
                                 <div id="registerDiv">
-                                    <img src="./icons/edit.svg" alt="">
+                                    <!-- <img src="./icons/edit.svg" alt=""> -->
                                     <a href="register.html">Register Now</a>
                                 </div>
                                 <span class="divider">|</span>
@@ -114,9 +114,11 @@
                                 <img src="./icons/user-icon.svg" alt="">
                                 <div id="userNameDiv"></div>
                             </div>
-                            <div>
+                            <div id="cartDiv">
                                 <img src="./icons/cart.svg" alt="">
-                                <a href="#">0 Items - (Rs.0.00)</a>
+                                <a href="/Library-System-Frontend/my-carts.html"><span id="cart-items">0</span> Items -
+                                    (Rs.<span id="carts-price">0.00</span>)</a>
+
                             </div>
                         </div>
 
@@ -553,6 +555,7 @@
             const loginDiv = document.getElementById("loginDiv");
             const profileDiv = document.getElementById("profileDiv");
             const userNameDiv = document.getElementById("userNameDiv");
+            const cartDiv = document.getElementById("cartDiv");
 
             access_token = localStorage.getItem("access_token")
 
@@ -584,18 +587,60 @@
                     if (data.success) {
                         loginDiv.style.display = "none";
                         profileDiv.style.display = "flex";
+                        cartDiv.style.display = "block";
                         userNameDiv.innerText = data.data.username
                     } else {
-                        loginDiv.style.display = "none";
+                        loginDiv.style.display = "flex";
+                        cartDiv.style.display = "none";
+                        localStorage.removeItem("access_token")
                     }
 
                 } catch (error) {
                     console.error('Fetch error:', error);
                 }
             }
-            getProfile()
+
+            async function fetchCarts() {
+                // const booksInCart = document.getElementById("books-in-cart")
+                const cartItems = document.getElementById("cart-items");
+                const cartsPrice = document.getElementById("carts-price");
+
+                const url = 'http://localhost:5000/books/get-carts-price';
+
+                const bearerToken = localStorage.getItem("access_token")
+                const headers = new Headers();
+                headers.append('Authorization', `Bearer ${bearerToken}`);
+                headers.append('Content-Type', 'application/json');
+
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: headers,
+                    });
+
+                    const data = await response.json();
+                    console.log(data)
+
+                    if (data.success) {
+                        cartItems.innerText = data.data.quantity
+                        cartsPrice.innerText = data.data.price
+                    }
+                } catch (error) {
+                    // Handle any errors that occurred during the fetch process
+                    console.error('Fetch error:', error);
+                }
+            }
+
+            Promise.all([fetchCarts(), getProfile()])
+                .then(() => {
+                    // console.log("Both fetch requests completed.");
+                })
+                .catch((error) => {
+                    console.error("Error in fetching:", error);
+                });
         });
     </script>
+
 </body>
 
 </html>

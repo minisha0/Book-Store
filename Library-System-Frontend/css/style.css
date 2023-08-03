@@ -144,6 +144,7 @@ header.topbar .auth > div img {
 
 .flex {
   display: flex;
+  gap: 10px;
 }
 .justify-between {
   justify-content: space-between;
@@ -679,4 +680,21 @@ footer.copyright a {
   header.hero {
     margin-top: -3rem;
   }
+}
+
+#success-message,
+#error-message {
+  width: 300px;
+  /* Adjust the message width to your preference */
+  margin: 10px auto;
+  /* Center the message horizontally with a 10px top and bottom margin */
+  padding: 15px;
+  border: 1px solid #045b07;
+  /* For success message, you can use #4caf50 or your preferred color */
+  border-radius: 5px;
+  text-align: center;
+  background-color: #dff0d8;
+  /* For success message, you can use #dff0d8 or your preferred color */
+  color: #4caf50;
+  /* For success message, you can use #4caf50 or your preferred color */
 }

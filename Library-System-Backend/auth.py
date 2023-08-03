@@ -8,7 +8,7 @@ def unauthorized_response_callback(error_str):
     return jsonify(Message.format_message('Missing or invalid token', False, None)), 401
 
 # Custom response for JWT expired tokens
-def expired_token_response_callback(expired_token):
+def expired_token_response_callback(jwt_header, jwt_data):
     return jsonify(Message.format_message('Token has expired', False, None)), 401
 
 def is_admin():

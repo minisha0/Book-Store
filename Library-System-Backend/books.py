@@ -13,7 +13,16 @@ from bson.json_util import dumps, RELAXED_JSON_OPTIONS
 
 books_bp = Blueprint('books', __name__, url_prefix='/books')
 
-# so to get this U go to /books/newly_arrived okay?
+@books_bp.get("/list")
+def get_all_books():
+    try:
+        books = list(books_collection.find({}, {'_id': False}).sort('published_date', DESCENDING))
+    except Exception as e:
+        return jsonify(Message.format_message(f"Error while fetching books: {str(e)}", False)), 500
+
+    return jsonify(Message.format_message('Successfully obtained books', True, books))
+
+
 @books_bp.get("/newly-arrived")
 def get_newly_arrived_book():
     limit = int(request.args.get('limit', 10))
@@ -47,21 +56,30 @@ def get_book_details():
 @books_bp.post("/add-book")
 @jwt_required()
 def add_book():
+    print("next check admin")
     if not is_admin():
+        print("check admin")
         return jsonify(Message.format_message('Unauthorized to add a book', False)), 403
     
+    print("next make model")
     try:
+        print("make model")
         req = BookModel(**request.get_json())
     except ValidationError as e:
+        print(e)
         return jsonify(Message.format_message('Validation Error', False, e.errors())), 400
 
     exist_book = books_collection.find_one({'isbn': req.isbn})
+
     if exist_book:
+        print("books already exists")
         return jsonify(Message.format_message(f'Book with ISBN {req.isbn} already exists', False))
 
     try:
         book = books_collection.insert_one(req.dict())
+        print("insert book")
     except Exception as e:
+        print(e)
         return jsonify(Message.format_message(f"Error while adding the book: {str(e)}", False)), 500
 
     return jsonify(Message.format_message('Book added successfully', True))
@@ -99,7 +117,7 @@ def update_book():
     return jsonify(Message.format_message(f'Book with ISBN {isbn} updated successfully', True)), 200
 
 
-@books_bp.post("/delete")
+@books_bp.get("/delete")
 @jwt_required()
 def delete_book():
     if not is_admin():
@@ -287,3 +305,52 @@ def get_my_cart_books():
 
 
     return jsonify(Message.format_message("Successfully retrieved cart items", True, cart_items)), 200
+
+
+@books_bp.get("/get-cart")
+@jwt_required()
+def get_my_cart():
+    user_id = get_jwt_identity()
+    book_isbn = request.args.get('isbn')
+
+    try:
+        # Find the carts for the current user
+        cart = carts_collection.find_one({"user_id": user_id, "book_isbn": book_isbn}, {"_id": 0})
+        print(cart)
+
+    except PyMongoError as e:
+        return jsonify(Message.format_message('Error occurred while processing the request', False)), 500
+
+
+    return jsonify(Message.format_message("Successfully retrieved cart", True, cart)), 200
+
+
+
+
+@books_bp.get("/get-carts-price")
+@jwt_required()
+def get_my_carts_price():
+    user_id = get_jwt_identity()
+
+    # Find the carts for the current user
+    carts = carts_collection.find({"user_id": user_id})
+
+    # Check if there are any carts
+    if not carts:
+        return jsonify(Message.format_message('Books not found in the cart', False, None)), 404
+
+    # Create a list to hold the formatted cart items
+    data = {
+        'price': 0,
+        'quantity': 0
+    }
+
+    # Iterate through the carts and format the data
+    for cart in carts:
+        book = books_collection.find_one({"isbn": cart["book_isbn"]})
+        if book:
+            data['price'] = data['price'] + book["price"] * cart["quantity"]
+            data['quantity'] = data['quantity'] + cart["quantity"]
+
+
+    return jsonify(Message.format_message("Successfully retrieved carts price", True, data)), 200

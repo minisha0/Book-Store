@@ -15,6 +15,8 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 10px;
   }
   
   #login-form input {
@@ -88,3 +90,20 @@ body {
     border-radius: 2px;
     cursor: pointer;
   }
+
+  #success-message,
+#error-message {
+  width: 200px;
+  /* Adjust the message width to your preference */
+  margin: 10px auto;
+  /* Center the message horizontally with a 10px top and bottom margin */
+  padding: 10px;
+  border: 1px solid #045b07;
+  /* For success message, you can use #4caf50 or your preferred color */
+  border-radius: 5px;
+  text-align: center;
+  background-color: #dff0d8;
+  /* For success message, you can use #dff0d8 or your preferred color */
+  color: #4caf50;
+  /* For success message, you can use #4caf50 or your preferred color */
+}

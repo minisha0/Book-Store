@@ -7,7 +7,7 @@ div.books {
 }
 
 .box-container {
-  margin-bottom: 50px;
+  padding-bottom: 100px;
 }
 
 div.books h1 {
@@ -152,4 +152,65 @@ button#toggleFormButton {
 
 button#toggleFormButton:hover {
   background-color: #911f40;
+}
+
+
+
+
+/* <div class="cart">
+<div class="cart-image">
+    <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Gutenberg_Bible%2C_Lenox_Copy%2C_New_York_Public_Library%2C_2009._Pic_01.jpg/640px-Gutenberg_Bible%2C_Lenox_Copy%2C_New_York_Public_Library%2C_2009._Pic_01.jpg">
+</div>
+<div class="cart-name">Popular Science</div>
+<div class="cart-quantity">Quantity: 20</div>
+<div class="cart-price">Price: 2000</div>
+<div class="cart-total">Total: 40000</div>
+</div> */
+
+#carts {
+  min-height: 60vh;
+  /* flex-wrap: wrap; */
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+}
+
+.cart {
+  padding: 10px;
+  background-color: white;
+  height: fit-content;
+  width: fit-content;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.cart-details-box {
+  margin-top: 10px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#carts .cart-image {
+  height: 250px;
+  width: 250px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+#carts .cart-name {
+  font-weight: 900;
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#carts img {
+  height: 250px;
+  width: 250px;
+  object-fit: cover;
 }

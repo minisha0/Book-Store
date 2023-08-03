@@ -15,6 +15,10 @@
             <input type="text" id="username" placeholder="Username" required> <br>
             <input type="password" id="password" placeholder="Password" required> <br>
             <button type="submit">Login </button>
+            <!-- Display Success Message (Hidden by default) -->
+            <div id="error-message" style="display: none;">
+                <p>Admin logged in successfully!</p>
+            </div>
         </form>
     </div>
 
@@ -22,15 +26,54 @@
         const loginForm = document.getElementById("login-form");
         loginForm.addEventListener("submit", function (event) {
             event.preventDefault();
+
+            const errorMessage = document.getElementById("error-message");
+
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
-            if (username === "admin@gmail.com" && password === "admin") {
-                console.log("heheheh");
-                localStorage.setItem("user", true);
-                window.location.replace("admin.html");
-            } else {
-                alert("Invalid credentials. Please try again.");
+
+            const userData = {
+                username: username,
+                password: password,
+            };
+
+            const url = 'http://localhost:5000/admin-login';
+
+
+            // Perform the POST request using fetch
+            async function loginAdmin() {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(userData),
+                    });
+
+                    const data = await response.json();
+
+                    errorMessage.innerText = data.message
+                    errorMessage.style.display = "block"
+
+                    if (data.success) {
+                        localStorage.setItem("access_token", data.data.access_token)
+                        window.location.href = "http://127.0.0.1:5500/Library-System-Frontend/admin.html"
+                    }
+
+                    setTimeout(function () {
+                        // Show the success message and hide the form
+                        errorMessage.style.display = "none";
+                    }, 1000);
+
+                    // Process the response data after the POST request
+                    console.log(data);
+                } catch (error) {
+                    // Handle any errors that occurred during the fetch process
+                    console.error('Fetch error:', error);
+                }
             }
+            loginAdmin()
         });
     </script>
 </body>
