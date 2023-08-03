@@ -1,12 +1,13 @@
 const tableBody = document.getElementById("table_body");
 const submit_btn = document.getElementById("submit_btn");
 const url = "http://localhost:8000/book/";
-const user = localStorage.getItem("user");
+const access_token = localStorage.getItem("access_token");
 
-if (!user) {
+if (!access_token) {
   alert("Please login to view this page");
   window.location.replace("admin-login.html");
 }
+
 const items = [];
 fetch(url + "get_all")
   .then((res) => res.json())

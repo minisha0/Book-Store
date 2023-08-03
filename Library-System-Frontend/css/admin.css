@@ -63,6 +63,7 @@ body {
     padding: 20px;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
+    background-color: white;
   }
   
   #form > div {
