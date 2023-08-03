@@ -26,8 +26,8 @@ async function getProfile() {
     const data = await response.json();
 
     if (data.success) {
-      if (data.data.type != "admin") {
-        window.location.replace("admin-login.html");
+      if (data.data.type == "admin") {
+        window.location.replace("admin.html");
       }
     } else {
       window.location.replace("admin-login.html");
@@ -151,7 +151,6 @@ const handleAddPost = async (event) => {
       const data = await response.json();
 
       if (data.success) {
-        alert("Book inserted");
         window.location.reload();
       }
     } catch (error) {
