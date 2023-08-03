@@ -82,7 +82,7 @@
 
                     if (data.success) {
                         localStorage.setItem("access_token", data.data.access_token)
-                        window.location.href = "http://127.0.0.1:5500/Library-System-Frontend/"
+                        window.location.href = "http://127.0.0.1:5500/Book-Frontend/"
                     }
 
                     // Process the response data after the POST request
@@ -101,13 +101,14 @@
 
         // Add event listener to the Sign In button
         loginForm.addEventListener('submit', handleFormSubmission);
+
     </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             access_token = localStorage.getItem("access_token")
             if (access_token) {
-                window.location.href = "http://127.0.0.1:5500/Library-System-Frontend/"
+                window.location.href = "http://127.0.0.1:5500/Book-Frontend/"
             }
         });
     </script>

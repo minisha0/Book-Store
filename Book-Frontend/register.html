@@ -104,7 +104,7 @@
                     errorMessage.style.display = "block"
 
                     if (data.success) {
-                        window.location.href = "http://127.0.0.1:5500/Library-System-Frontend/login.html"
+                        window.location.href = "http://127.0.0.1:5500/Book-Frontend/login.html"
                     }
                     // Process the response data after the POST request
                     console.log(data);
@@ -130,7 +130,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             access_token = localStorage.getItem("access_token")
             if (access_token) {
-                window.location.href = "http://127.0.0.1:5500/Library-System-Frontend/"
+                window.location.href = "http://127.0.0.1:5500/Book-Frontend/"
             }
         });
     </script>

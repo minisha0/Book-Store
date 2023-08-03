@@ -698,3 +698,9 @@ footer.copyright a {
   color: #4caf50;
   /* For success message, you can use #4caf50 or your preferred color */
 }
+
+#logout {
+  margin-left: 10px;
+  text-decoration: underline;
+  cursor: pointer;
+}

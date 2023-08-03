@@ -112,9 +112,12 @@
                         </div>
                         <div id="cartDiv">
                             <img src="./icons/cart.svg" alt="">
-                            <a href="/Library-System-Frontend/my-carts.html"><span id="cart-items">0</span> Items -
+                            <a href="/Book-Frontend/my-carts.html"><span id="cart-items">0</span> Items -
                                 (Rs.<span id="carts-price">0.00</span>)</a>
 
+                        </div>
+                        <div id="logout">
+                            Logout
                         </div>
                     </div>
 
@@ -308,7 +311,7 @@
                                 cartIcon.width = 25;
                                 const link = document.createElement('a');
                                 link.textContent = 'Add To Cart';
-                                link.href = `/Library-System-Frontend/cart.html?book-id=${book.isbn}`
+                                link.href = `/Book-Frontend/cart.html?book-id=${book.isbn}`
                                 btn.appendChild(cartIcon);
                                 btn.appendChild(link);
                                 boxDiv.appendChild(btn);
@@ -339,6 +342,8 @@
             </script>
 
             <script>
+                const logout = document.getElementById("logout")
+
                 document.addEventListener("DOMContentLoaded", function () {
                     const loginDiv = document.getElementById("loginDiv");
                     const profileDiv = document.getElementById("profileDiv");
@@ -375,9 +380,11 @@
                             if (data.success) {
                                 loginDiv.style.display = "none";
                                 profileDiv.style.display = "flex";
+                                logout.style.display = "block";
                                 cartDiv.style.display = "block";
                                 userNameDiv.innerText = data.data.username
                             } else {
+                                logout.style.display = "none";
                                 loginDiv.style.display = "flex";
                                 cartDiv.style.display = "none";
                                 localStorage.removeItem("access_token")
@@ -426,6 +433,13 @@
                         .catch((error) => {
                             console.error("Error in fetching:", error);
                         });
+
+                    const handleLogout = () => {
+                        localStorage.removeItem("access_token")
+                        window.location.reload()
+                    }
+
+                    logout.addEventListener('click', handleLogout);
                 });
             </script>
 
