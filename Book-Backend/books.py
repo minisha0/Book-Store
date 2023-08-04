@@ -92,25 +92,25 @@ def update_book():
     if not is_admin():
         return jsonify(Message.format_message('You do not have permission to perform this action', False)), 403
 
-    try:
-        req = BookModel(**request.get_json())
-    except ValidationError as e:
-        return jsonify(Message.format_message('Validation Error', False, e.errors())), 400
+    req = request.get_json()
+    print(req)
     
-    isbn = req.isbn
+    isbn = req['isbn']
     book = books_collection.find_one({'isbn': isbn})
+    print(book['isbn'])
     
     if not book:
         return jsonify(Message.format_message(f'Book with ISBN {isbn} not found', False)), 404
 
     update_data = {
-        'name': req.name,
-        'published_date': req.published_date,
-        'author_name': req.author_name,
-        'category': req.category,
-        'description': req.description,
-        'image_url': req.image_url,
-        'rating': req.rating
+        'name': req.get('name', book['name']),
+        'published_date': req.get('published_date', book['published_date']),
+        'author_name': req.get('author_name', book['author_name']),
+        'category': req.get('category', book['category']),
+        'description': req.get('description', book['description']),
+        'image_url': req.get('image_url', book['image_url']),
+        'rating': req.get('rating', book['rating']),
+        'price': req.get('price', book['price']),
     }
 
     books_collection.update_one({'isbn': isbn}, {'$set': update_data})
