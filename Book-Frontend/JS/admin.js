@@ -43,21 +43,88 @@ fetch("http://localhost:5000/books/list")
   .then((res) => res.json())
   .then((data) => {
     data.data.forEach((d) => {
-      const { name, isbn } = d;
+      console.log(d)
+      const { name, isbn, price } = d;
 
-      items.push({ isbn, name });
+      items.push({ isbn, name, price });
     });
     loadTable();
   });
 
 const loadTable = () => {
+  const row = document.createElement("tr");
+  let cell = document.createElement("td");
+  let cellText = document.createTextNode("Isbn");
+  cell.appendChild(cellText);
+  row.appendChild(cell);
+  tableBody.appendChild(row);
+  cell = document.createElement("td");
+  cellText = document.createTextNode("Name");
+  cell.appendChild(cellText);
+  row.appendChild(cell);
+  tableBody.appendChild(row);
+  cell = document.createElement("td");
+  cellText = document.createTextNode("Price");
+  cell.appendChild(cellText);
+  row.appendChild(cell);
+  tableBody.appendChild(row);
+
   items.forEach((item) => {
     const row = document.createElement("tr");
     for (let key in item) {
       const cell = document.createElement("td");
-      const cellText = document.createTextNode(item[key]);
-      cell.appendChild(cellText);
-      row.appendChild(cell);
+
+      if (key != "isbn") {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = item[key];
+        cell.appendChild(input);
+        row.appendChild(cell);
+
+        input.addEventListener("blur", async () => {
+          console.log("hey")
+          item[key] = input.value; // Update the item's value with the new input value
+
+          const url = 'http://localhost:5000/books/update-book';
+
+          const bookData = {};
+          bookData[key] = item[key]
+
+          if (key != "isbn")
+            bookData["isbn"] = item["isbn"]
+
+          const bearerToken = localStorage.getItem("access_token")
+          const headers = new Headers();
+          headers.append('Authorization', `Bearer ${bearerToken}`);
+          headers.append('Content-Type', 'application/json');
+
+          try {
+            const response = await fetch(url, {
+              method: 'POST',
+              headers: headers,
+              body: JSON.stringify(bookData),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+
+            }
+          } catch (error) {
+            // Handle any errors that occurred during the fetch process
+            console.error('Fetch error:', error);
+          }
+
+        });
+      } else {
+        const text = document.createElement("div");
+        text.innerText = item[key];
+        cell.appendChild(text);
+        row.appendChild(cell);
+      }
+
+
+
     }
 
     const deleteCol = document.createElement("td");
@@ -77,31 +144,34 @@ const loadTable = () => {
 
 // delete post
 const deleteColn = async (isbn) => {
-  const url = "http://localhost:5000/books/delete";
-  const queryParams = new URLSearchParams({ isbn: isbn });
-  const urlWithParams = `${url}?${queryParams}`;
+  const confirmation = window.confirm("Are you sure you want to delete this cart?");
 
-  const bearerToken = localStorage.getItem("access_token")
-  const headers = new Headers();
-  headers.append('Authorization', `Bearer ${bearerToken}`);
-  headers.append('Content-Type', 'application/json');
+  if (confirmation) {
+    const url = "http://localhost:5000/books/delete";
+    const queryParams = new URLSearchParams({ isbn: isbn });
+    const urlWithParams = `${url}?${queryParams}`;
 
-  try {
-    const response = await fetch(urlWithParams, {
-      method: 'GET',
-      headers: headers,
-    });
+    const bearerToken = localStorage.getItem("access_token")
+    const headers = new Headers();
+    headers.append('Authorization', `Bearer ${bearerToken}`);
+    headers.append('Content-Type', 'application/json');
 
-    const data = await response.json();
+    try {
+      const response = await fetch(urlWithParams, {
+        method: 'GET',
+        headers: headers,
+      });
 
-    if (data.success) {
-      alert("Item deleted successfully");
-      window.location.reload();
+      const data = await response.json();
+
+      if (data.success) {
+        alert("Item deleted successfully");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
     }
-  } catch (error) {
-    console.error('Fetch error:', error);
   }
-
 };
 
 // add new post

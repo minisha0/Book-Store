@@ -109,8 +109,8 @@ def update_book():
         'category': req.get('category', book['category']),
         'description': req.get('description', book['description']),
         'image_url': req.get('image_url', book['image_url']),
-        'rating': req.get('rating', book['rating']),
-        'price': req.get('price', book['price']),
+        'rating': int(req.get('rating', book['rating'])),
+        'price': int(req.get('price', book['price'])),
     }
 
     books_collection.update_one({'isbn': isbn}, {'$set': update_data})
