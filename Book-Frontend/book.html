@@ -281,6 +281,8 @@
 
                         const newlyArrivedBooks = data.data
 
+                        console.log(newlyArrivedBooks)
+
                         // Function to render popular books
                         function renderPopularBooks() {
                             const renderPopularBooksDiv = document.getElementById('render_popular_books');
@@ -294,8 +296,8 @@
                                 adDiv.classList.add('ad');
                                 const bookImage = document.createElement('img');
                                 bookImage.src = book.image_url;
-                                bookImage.width = 450;
-                                bookImage.height = 450;
+                                bookImage.width = 350;
+                                bookImage.height = 300;
                                 bookImage.classList.add("book-image")
                                 adDiv.appendChild(bookImage);
                                 boxDiv.appendChild(adDiv);
@@ -303,6 +305,16 @@
                                 const h3 = document.createElement('h3');
                                 h3.textContent = book.name;
                                 boxDiv.appendChild(h3);
+
+                                const priceDiv = document.createElement('div');
+                                priceDiv.classList.add("price")
+                                priceDiv.textContent = `Rs. ${book.price}`;
+                                boxDiv.appendChild(priceDiv);
+                                
+                                const descriptionDiv = document.createElement('div');
+                                descriptionDiv.classList.add("description")
+                                descriptionDiv.textContent = book.description;
+                                boxDiv.appendChild(descriptionDiv);
 
                                 const btn = document.createElement('button');
                                 // btn.classList.add('books-btn', 'btn', 'btn-primary');

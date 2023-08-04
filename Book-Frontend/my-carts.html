@@ -110,10 +110,14 @@
                             <img src="./icons/user-icon.svg" alt="">
                             <div id="userNameDiv"></div>
                         </div>
-                        <div>
+                        <div id="cartDiv">
                             <img src="./icons/cart.svg" alt="">
                             <a href="/Book-Frontend/my-carts.html"><span id="cart-items">0</span> Items -
                                 (Rs.<span id="carts-price">0.00</span>)</a>
+                        </div>
+
+                        <div id="logout">
+                            Logout
                         </div>
                     </div>
 
@@ -172,10 +176,13 @@
             </div>
 
             <script>
+                const logout = document.getElementById("logout")
+
                 document.addEventListener("DOMContentLoaded", function () {
                     const loginDiv = document.getElementById("loginDiv");
                     const profileDiv = document.getElementById("profileDiv");
                     const userNameDiv = document.getElementById("userNameDiv");
+                    const cartDiv = document.getElementById("cartDiv");
 
                     access_token = localStorage.getItem("access_token")
 
@@ -207,9 +214,14 @@
                             if (data.success) {
                                 loginDiv.style.display = "none";
                                 profileDiv.style.display = "flex";
+                                logout.style.display = "block";
+                                cartDiv.style.display = "block";
                                 userNameDiv.innerText = data.data.username
                             } else {
-                                loginDiv.style.display = "none";
+                                logout.style.display = "none";
+                                loginDiv.style.display = "flex";
+                                cartDiv.style.display = "none";
+                                localStorage.removeItem("access_token")
                             }
 
                         } catch (error) {
@@ -263,6 +275,12 @@
                                 const cartImage = document.createElement("img")
                                 cartImage.src = cart.book.image_url
                                 cartImageBox.appendChild(cartImage)
+                                const cartDeleteDiv = document.createElement("div")
+                                cartDeleteDiv.classList.add("delete-button")
+                                cartDeleteDiv.setAttribute("bookIsbn", cart.book.isbn);
+                                const cartDeleteImage = document.createElement("img")
+                                cartDeleteImage.src = "/Book-Frontend/icons/delete.png"
+                                cartDeleteDiv.appendChild(cartDeleteImage)
 
 
                                 const cartDetailsBox = document.createElement("div")
@@ -270,9 +288,11 @@
                                 const cartName = document.createElement("div")
                                 cartName.classList.add("cart-name")
                                 cartName.innerText = cart.book.name
-                                const cartQuantity = document.createElement("div")
+                                const cartQuantity = document.createElement("input")
                                 cartQuantity.classList.add("cart-quantity")
-                                cartQuantity.innerText = `Quantity: ${cart.quantity}`
+                                cartQuantity.setAttribute("type", "number");
+                                cartQuantity.setAttribute("min", "1");
+                                cartQuantity.value = cart.quantity
                                 const cartPrice = document.createElement("div")
                                 cartPrice.classList.add("cart-price")
                                 cartPrice.innerText = `Price: ${cart.book.price}`
@@ -287,12 +307,95 @@
 
                                 cartBox.appendChild(cartImageBox)
                                 cartBox.appendChild(cartDetailsBox)
+                                cartBox.appendChild(cartDeleteDiv)
                                 carts.appendChild(cartBox)
+
+                                cartDeleteDiv.addEventListener("click", async function () {
+                                    const bookIsbn = this.getAttribute("bookIsbn");
+
+                                    const url = "http://localhost:5000/books/delete-cart";
+                                    const queryParams = new URLSearchParams({ isbn: bookIsbn });
+                                    const urlWithParams = `${url}?${queryParams}`;
+
+                                    const bearerToken = localStorage.getItem("access_token")
+                                    const headers = new Headers();
+                                    headers.append('Authorization', `Bearer ${bearerToken}`);
+                                    headers.append('Content-Type', 'application/json');
+
+                                    const confirmation = window.confirm("Are you sure you want to delete this cart?");
+
+                                    if (confirmation) {
+                                        try {
+                                            const response = await fetch(urlWithParams, {
+                                                method: 'GET',
+                                                headers: headers,
+                                            });
+
+                                            const data = await response.json();
+
+                                            if (data.success) {
+                                                alert("Item deleted successfully");
+                                                window.location.reload();
+                                            }
+                                        } catch (error) {
+                                            console.error('Fetch error:', error);
+                                        }
+                                    }
+
+                                });
+
+
+                                cartQuantity.addEventListener("change", () => {
+                                    const bookIsbn = cartDeleteDiv.getAttribute("bookIsbn");
+                                    const newQuantity = parseInt(cartQuantity.value, 10);
+                                    if (!isNaN(newQuantity) && newQuantity >= 1) {
+                                        const url = 'http://localhost:5000/books/update-cart';
+
+                                        const cartData = {
+                                            book_isbn: bookIsbn,
+                                            quantity: newQuantity
+                                        };
+
+                                        const bearerToken = localStorage.getItem("access_token")
+                                        const headers = new Headers();
+                                        headers.append('Authorization', `Bearer ${bearerToken}`);
+                                        headers.append('Content-Type', 'application/json');
+
+                                        // Perform the POST request using fetch
+                                        async function changeCart() {
+                                            try {
+                                                const response = await fetch(url, {
+                                                    method: 'POST',
+                                                    headers: headers,
+                                                    body: JSON.stringify(cartData),
+                                                });
+
+                                                const data = await response.json();
+
+                                                if (data.success) {
+                                                    cartTotal.innerText = `Total: ${cart.book.price * newQuantity}`;
+                                                } else {
+                                                    cartQuantity.value = cart.quantity
+                                                }
+                                            } catch (error) {
+                                                // Handle any errors that occurred during the fetch process
+                                                console.error('Fetch error:', error);
+                                            }
+                                        }
+
+                                        changeCart()
+
+                                        cartTotal.innerText = `Total: ${cart.book.price * newQuantity}`;
+                                    } else {
+                                        cartQuantity.value = cart.quantity;
+                                    }
+                                });
 
                             })
 
                             cartItems.innerText = quantity
                             cartsPrice.innerText = price
+
                         }
                     } catch (error) {
                         // Handle any errors that occurred during the fetch process
@@ -301,6 +404,12 @@
                 }
 
                 fetchCartsAll()
+                const handleLogout = () => {
+                    localStorage.removeItem("access_token")
+                    window.location.reload()
+                }
+
+                logout.addEventListener('click', handleLogout);
             </script>
 
 

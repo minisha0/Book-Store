@@ -247,26 +247,28 @@ def add_to_cart():
 @jwt_required()
 def update_cart():
     user_id = get_jwt_identity()  # Get the user_id from the JWT token
+    req = request.get_json()
+    print(req)
+
+    book_isbn = req['book_isbn']
+    quantity = req['quantity']
 
     try:
-        req = CartItemModel(user_id=user_id, **request.get_json())
-    except ValidationError as e:
-        return jsonify(Message.format_message('Validation error', False, e.errors())), 400
+        cart_item = carts_collection.find_one({"user_id": user_id, "book_isbn": book_isbn})
 
-    book_isbn = req.book_isbn
-    quantity = req.quantity
+        if cart_item:
+            carts_collection.update_one(
+                {"user_id": user_id, "book_isbn": book_isbn},
+                {"$set": {"quantity": quantity}}
+            )
+            return jsonify(Message.format_message('Cart updated successfully', True))
 
-    cart_item = carts_collection.find_one({"user_id": user_id, "book_isbn": book_isbn})
+        else:
+            return jsonify(Message.format_message('Cart not found', False)), 404
+        
+    except PyMongoError as e:
+        return jsonify(Message.format_message('Error occurred while processing the request', False)), 500
 
-    if cart_item:
-        carts_collection.update_one(
-            {"user_id": user_id, "book_isbn": book_isbn},
-            {"$set": {"quantity": quantity}}
-        )
-        return jsonify(Message.format_message('Cart updated successfully', True))
-    else:
-        return jsonify(Message.format_message('Book not found in the cart', False)), 404
-    
 
 @books_bp.get("/get-cart-books")
 @jwt_required()
@@ -323,6 +325,23 @@ def get_my_cart():
 
 
     return jsonify(Message.format_message("Successfully retrieved cart", True, cart)), 200
+
+
+@books_bp.get("/delete-cart")
+@jwt_required()
+def delete_cart():
+    user_id = get_jwt_identity()
+    book_isbn = request.args.get('isbn')
+
+    try:
+        # Find the carts for the current user
+        cart = carts_collection.delete_one({"user_id": user_id, "book_isbn": book_isbn})
+
+    except PyMongoError as e:
+        return jsonify(Message.format_message('Error occurred while processing the request', False)), 500
+
+
+    return jsonify(Message.format_message("Successfully deleted cart", True, None)), 200
 
 
 
