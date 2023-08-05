@@ -130,11 +130,7 @@ const loadTable = () => {
     const deleteCol = document.createElement("td");
     const deleteText = document.createTextNode("Delete");
     deleteCol.appendChild(deleteText);
-    const updateCol = document.createElement("td");
-    const updateText = document.createTextNode("Update");
-    updateCol.appendChild(updateText);
-    updateCol.style.color = "green";
-    updateCol.style.cursor = "pointer";
+   
     deleteCol.style.color = "red";
     deleteCol.style.cursor = "pointer";
 
@@ -150,29 +146,17 @@ const loadTable = () => {
     deleteCol.addEventListener("click", function () {
       deleteColn(item?.isbn);
     });
-<<<<<<< HEAD
     editCol.addEventListener("click", function(){
       window.location.href = "http://127.0.0.1:5500/Book-Frontend/edit.html?isbn=" + item?.isbn;
     });
     row.appendChild(editCol);
-=======
-    updateCol.addEventListener("click", function () {
-      editBook(item?.isbn)
-    })
->>>>>>> 47cd71a64b0576acecfacd498352b8c1eb95262c
+    
     row.appendChild(deleteCol);
-    row.appendChild(updateCol);
+    
     tableBody.appendChild(row);
   });
 };
-// Function to handle the "Edit" button click
-function editBook(bookNumber) {
-  const book = bookDetails.find((book) => book.bookNumber === bookNumber);
-  if (book) {
-    // Implement the edit functionality here, e.g., open a form to edit the book details
-    console.log("Edit book:", book);
-  }
-}
+
 // delete post
 const deleteColn = async (isbn) => {
   const confirmation = window.confirm("Are you sure you want to delete this cart?");
