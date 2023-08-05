@@ -133,10 +133,22 @@ const loadTable = () => {
     deleteCol.style.color = "red";
     deleteCol.style.cursor = "pointer";
 
+    const editCol = document.createElement("td");
+    const editText = document.createTextNode("Edit");
+    editCol.appendChild(editText);
+    editCol.style.color = "red";
+    editCol.style.cursor = "pointer";
+
+    
+
     // set id as book_{isBn}
     deleteCol.addEventListener("click", function () {
       deleteColn(item?.isbn);
     });
+    editCol.addEventListener("click", function(){
+      window.location.href = "http://127.0.0.1:5500/Book-Frontend/edit.html?isbn=" + item?.isbn;
+    });
+    row.appendChild(editCol);
     row.appendChild(deleteCol);
     tableBody.appendChild(row);
   });

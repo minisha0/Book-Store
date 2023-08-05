@@ -327,6 +327,19 @@ def get_my_cart():
     return jsonify(Message.format_message("Successfully retrieved cart", True, cart)), 200
 
 
+@books_bp.get("/get-book")
+def get_book():
+    book_isbn = request.args.get('isbn')
+    try:
+        book = books_collection.find_one({"isbn": book_isbn}, {"_id": 0})
+
+    except PyMongoError as e:
+        return jsonify(Message.format_message('Error occurred while processing the request', False)), 500
+
+
+    return jsonify(Message.format_message('Successfully obtained books', True, book))
+
+
 @books_bp.get("/delete-cart")
 @jwt_required()
 def delete_cart():
